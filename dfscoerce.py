@@ -1,3 +1,8 @@
+#!/usr/bin/env python3
+#
+#Most of this code is stolen from PetitPotam (@topotam) 
+#https://github.com/topotam/PetitPotam
+
 import sys
 import argparse
 
