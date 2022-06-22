@@ -84,7 +84,7 @@ class TriggerAuth():
 
 
 def main():
-    parser = argparse.ArgumentParser(add_help=True, description="PetitPotam - rough PoC to connect to lsarpc and elicit machine account authentication via MS-EFSRPC NetrDfsRemoveStdRoot()")
+    parser = argparse.ArgumentParser(add_help=True, description="DFSCoerce - PoC to coerce machine account authentication via MS-DFSNM NetrDfsRemoveStdRoot()")
     parser.add_argument('-u', '--username', action="store", default='', help='valid username')
     parser.add_argument('-p', '--password', action="store", default='', help='valid password (if omitted, it will be asked unless -no-pass)')
     parser.add_argument('-d', '--domain', action="store", default='', help='valid domain name')
