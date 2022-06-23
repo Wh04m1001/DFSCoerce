@@ -1,9 +1,11 @@
 # DFSCoerce
 
-PoC for MS-DFSNM coerce  authentication  using NetrDfsRemoveStdRoot method (and probably more but am lazy and its just PoC :P ).
+PoC for MS-DFSNM coerce  authentication  using NetrDfsRemoveStdRoot and NetrDfsAddStdRoot (found by [@xct_de](https://twitter.com/xct_de)) methods.
 
 
 Documentation: https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-dfsnm/95a506a8-cae6-4c42-b19d-9c1ed1223979
+
+
 
 
 Inspired by:
