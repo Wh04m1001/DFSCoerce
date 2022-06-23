@@ -41,7 +41,18 @@ class NetrDfsRemoveStdRootResponse(NDRCALL):
     structure = (
         ('ErrorCode', ULONG),
     )
-
+class NetrDfsAddRoot(NDRCALL):
+    opnum = 12
+    structure = (
+         ('ServerName',WSTR),
+         ('RootShare',WSTR),
+         ('Comment',WSTR),
+         ('ApiFlags',DWORD),
+     )
+class NetrDfsAddRootResponse(NDRCALL):
+     structure = (
+         ('ErrorCode', ULONG),
+     )
 
 class TriggerAuth():
     def connect(self, username, password, domain, lmhash, nthash, target, doKerberos, dcHost, targetIp):
