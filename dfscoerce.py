@@ -132,7 +132,7 @@ class TriggerAuth():
             print(e)
 
 def main():
-    parser = argparse.ArgumentParser(add_help=True, description="DFSCoerce - PoC to coerce machine account authentication via MS-DFSNM NetrDfsRemoveStdRoot()")
+    parser = argparse.ArgumentParser(add_help=True, description="DFSCoerce - PoC to coerce machine account authentication via MS-DFSNM")
     parser.add_argument('-u', '--username', action="store", default='', help='valid username')
     parser.add_argument('-p', '--password', action="store", default='', help='valid password (if omitted, it will be asked unless -no-pass)')
     parser.add_argument('-d', '--domain', action="store", default='', help='valid domain name')
